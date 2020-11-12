@@ -1,0 +1,6 @@
+<h2 mat-dialog-title>{{title}}</h2>
+<p>{{message}}</p>
+<div>
+  <app-dates-select [start]="value.start" [finish]="value.finish" (selected)="onSelected($event)">
+  </app-dates-select>
+</div>

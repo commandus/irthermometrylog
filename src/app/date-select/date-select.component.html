@@ -1,0 +1,12 @@
+<div>
+	<div class="dateform" fxLayout="column" fxLayoutAlign="stretch" >
+	<mat-form-field>
+		<input matInput [matDatepicker]="dpStart" placeholder="Дата" [formControl]="startDate" >
+		<mat-datepicker-toggle matSuffix [for]="dpStart"></mat-datepicker-toggle>
+		<mat-datepicker #dpStart></mat-datepicker>
+	</mat-form-field>
+	<div fxLayout="row" fxLayoutAlign="end stretch">
+		<button color="primary" mat-button (click)="select();">Выбрать</button>  
+	</div>
+  </div>
+</div>

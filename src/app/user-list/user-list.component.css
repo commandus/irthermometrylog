@@ -1,0 +1,23 @@
+.mat-table {
+    width: 100% !important;
+}
+
+.mat-column-id {
+	width: 64px !important;
+}
+
+.mat-column-rights {
+	width: 64px !important;
+}
+
+.mat-column-status {
+	width: 64px !important;
+}
+
+.mat-column-start {
+	width: 80px !important;
+}
+
+div, .filter {
+	padding: 10pt;
+}

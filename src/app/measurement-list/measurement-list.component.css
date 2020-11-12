@@ -1,0 +1,9 @@
+.temperatureC {
+	font-weight: bold;
+	padding-left: 5pt;;
+	padding-right: 5pt;
+}
+#measurement-list-chart {
+	width: 100%;
+	height: 500px;
+}

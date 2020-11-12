@@ -1,0 +1,55 @@
+<div>
+	Пользователи
+</div>
+<mat-progress-bar *ngIf="values.loading | async" mode="indeterminate"></mat-progress-bar>
+<mat-form-field class="filter">
+  <input matInput placeholder="Фильтр" #filter>
+</mat-form-field>
+<div>
+  <table mat-table [dataSource]="values" matSort>
+	<!--
+  'id', 'name', 'login', 'password', 'start', 'status', 'action'
+
+	-->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef matTooltip="Идентификатор пользователя"> № </th>
+      <td mat-cell *matCellDef="let v" routerLink="/user/{{v.id}}"> {{v.id}} </td>
+    </ng-container>
+	<ng-container matColumnDef="name">
+		<th mat-header-cell *matHeaderCellDef matTooltip="Необязательное имя пользователя"> Имя </th>
+		<td mat-cell *matCellDef="let v" routerLink="/user/{{v.id}}"> {{v.name}} </td>
+	</ng-container>
+	<ng-container matColumnDef="login">
+		<th mat-header-cell *matHeaderCellDef matTooltip="Логин пользователя"> Логин </th>
+		<td mat-cell *matCellDef="let v" routerLink="/user/{{v.id}}"> {{v.login}} </td>
+	</ng-container>
+	<ng-container matColumnDef="password">
+		<th mat-header-cell *matHeaderCellDef matTooltip="Пароль пользователя"> Пароль </th>
+		<td mat-cell *matCellDef="let v" routerLink="/user/{{v.id}}"> {{(isRoot(v) ? '' : v.password)}} </td>
+	</ng-container>
+	<ng-container matColumnDef="start">
+		<th mat-header-cell *matHeaderCellDef matTooltip="Зарегистрирован"> Дата </th>
+		<td mat-cell *matCellDef="let v" routerLink="/user/{{v.id}}"> {{v.start * 1000 | date : 'dd.MM.yyyy'}} </td>
+	</ng-container>
+	<ng-container matColumnDef="status">
+		<th mat-header-cell *matHeaderCellDef matTooltip="Запретить работу пользователя"> Выкл. </th>
+		<td mat-cell *matCellDef="let v" routerLink="/user/{{v.id}}">
+			<mat-slide-toggle [checked]="isUserDisabled(v)" (toggleChange)="toogleUserStatus(v)"></mat-slide-toggle>
+		</td>
+	</ng-container>
+    <ng-container matColumnDef="rights">
+		<th mat-header-cell *matHeaderCellDef matTooltip="Пользователь управляет другими пользователями"> root </th>
+		<td mat-cell *matCellDef="let v"> 
+			<mat-slide-toggle [checked]="isRoot(v)" (toggleChange)="toogleRoot(v)"></mat-slide-toggle>
+		</td>
+	</ng-container>
+	  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+  <mat-paginator [pageSize]="10"></mat-paginator>
+</div>
+<div fxLayout="row" fxLayoutAlign="end none">
+  <button mat-fab (click)="addNew()">
+    <mat-icon>add</mat-icon>
+  </button>
+</div>
