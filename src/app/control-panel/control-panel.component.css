@@ -1,0 +1,4 @@
+.mat-button[disabled] {
+  font-weight: bold;
+  color:white;
+}

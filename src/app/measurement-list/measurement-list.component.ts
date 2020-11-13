@@ -25,9 +25,12 @@ export class MeasurementListComponent implements OnInit, AfterViewInit {
     @ViewChild('filter') filter: ElementRef;
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
+    public max10 = 3700;
     private path: string;
     public cardno: number;
     public startFinish = new StartFinish();
+    public tmin: number;
+    public tmax: number;
 
     public values: MeasurementsDataSource;
       // 'id', 'gateid', 'imei', 'time', 't', 'tir', 'tmin', 'tambient', 'userid'
@@ -47,13 +50,16 @@ export class MeasurementListComponent implements OnInit, AfterViewInit {
       this.values = new MeasurementsDataSource(this.service);
       this.route.params.subscribe(params => {
         this.cardno = params['cardno'];
-        console.log('=========== url ');
         if (this.route.url['value'].length) {
           this.path = this.route.url['value'][0].path;
         } else {
           this.path = '';
         }
       });
+      this.values.connect(null).subscribe(r => {
+        this.updateMinMax();
+        this.drawChart(this);
+     });
     }
 
     ngAfterViewInit(): void {
@@ -114,7 +120,6 @@ export class MeasurementListComponent implements OnInit, AfterViewInit {
           this.paginator.length = 0;
         }}
       );
-      this.drawChart();
     }
 
     showDate(value: any): void {
@@ -140,13 +145,48 @@ export class MeasurementListComponent implements OnInit, AfterViewInit {
       this.router.navigateByUrl('/');
     }
 
-    drawChart(): void {
-      const data = new google.visualization.DataTable();
+    updateMinMax(): void {
+      this.values.connect(null).forEach(r => {
+        let tmin = 99999;
+        let tmax = -27315;
+        try {
+          r.forEach(l => {
+            if (l.t < tmin) {
+              tmin = l.tmin;
+            }
+            if (l.t > tmax) {
+              tmax = l.t;
+            }
+        }
+        );
+        } catch (error) {
+        }
+        if (tmin !== 99999) {
+          this.tmin = tmin;
+        } else {
+          this.tmin = 0;
+        }
+        if (tmax !== -27315) {
+          this.tmax = tmax;
+        } else {
+          this.tmax = 0;
+        }
+      });
+    }
+
+    drawChart(that: MeasurementListComponent): void {
+      let data: any;
+      try {
+        data = new google.visualization.DataTable();
+      } catch (error) {
+        google.charts.setOnLoadCallback(() => { that.drawChart(that); });
+        return;
+      }
       data.addColumn('date', 'Время');
       data.addColumn('number', 'Помещение');
       data.addColumn('number', 'Объект(ы)');
 
-      this.values.connect(null).forEach(r => {
+      that.values.connect(null).forEach(r => {
         r.forEach(l => {
           data.addRow([
             new Date(l.time),

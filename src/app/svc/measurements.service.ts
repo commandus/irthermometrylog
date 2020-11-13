@@ -49,7 +49,6 @@ export class MeasurementsService {
       + '&f=' + filter + '&o=' + ofs + '&s=' + pagesize + '&sort=' + sort)
     .pipe(
       map((response: Measurement) => {
-        console.log(response);
         return response;
     }));
   }

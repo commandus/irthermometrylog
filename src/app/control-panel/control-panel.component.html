@@ -1,0 +1,19 @@
+<button mat-button [matMenuTriggerFor]="menu">
+  <mat-icon>menu</mat-icon>
+</button>
+<mat-menu matTooltip="Нажмите чтобы распахнуть меню" #menu="matMenu">
+  <button mat-menu-item matTooltip="Температура объектов" [disabled]="router.url === '/'" routerLink="/">Температура</button>
+  <button mat-menu-item matTooltip="Температура помещения" [disabled]="router.url === '/indoor'" routerLink="/indoor">Температура помещения</button>
+  <hr/>
+  <button mat-menu-item matTooltip="Справка" [disabled]="router.url === '/about'" routerLink="/about">Инструкция пользователя</button>
+  <span *ngIf="env.isAdmin()">
+    <hr/>
+    <button mat-menu-item matTooltip="Показать список пользователей" [disabled]="router.url === '/users'" routerLink="/users">Пользователи</button>
+  </span>
+</mat-menu>
+<!--
+<button mat-button *ngIf="router.url === '/'" matTooltip="Обновить данные" (click)="refresh();">
+	<mat-icon>refresh</mat-icon>
+</button>
+-->
+

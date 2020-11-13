@@ -1,15 +1,3 @@
-import { UserSelectComponent } from './user-select/user-select.component';
-import { UserRegistrationComponent } from './user-registration/user-registration.component';
-import { UserLoginComponent } from './user-login/user-login.component';
-import { UsersService } from './svc/users.service';
-import { LoginService } from './svc/login.service';
-import { DateSelectComponent } from './date-select/date-select.component';
-import { MeasurementsService } from './svc/measurements.service';
-import { DialogUserSelectComponent } from './dialog-user-select/dialog-user-select.component';
-import { DialogDatesSelectComponent } from './dialog-dates-select/dialog-dates-select.component';
-import { DialogConfirmComponent } from './dialog-confirm/dialog-confirm.component';
-import { DialogRegistrationComponent } from './dialog-registration/dialog-registration.component';
-import { DialogLoginComponent } from './dialog-login/dialog-login.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
@@ -36,17 +24,33 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { RuDateAdapter } from './rudateadapter';
-import { MeasurementListComponent } from './measurement-list/measurement-list.component';
-
 import { MatPaginatorIntlRu } from './mat-paginator-ru';
+
+import { ControlPanelComponent } from './control-panel/control-panel.component';
+import { UserSelectComponent } from './user-select/user-select.component';
+import { UserRegistrationComponent } from './user-registration/user-registration.component';
+import { UserLoginComponent } from './user-login/user-login.component';
+import { UsersService } from './svc/users.service';
+import { LoginService } from './svc/login.service';
+import { DateSelectComponent } from './date-select/date-select.component';
+import { MeasurementsService } from './svc/measurements.service';
+import { DialogUserSelectComponent } from './dialog-user-select/dialog-user-select.component';
+import { DialogDatesSelectComponent } from './dialog-dates-select/dialog-dates-select.component';
+import { DialogConfirmComponent } from './dialog-confirm/dialog-confirm.component';
+import { DialogRegistrationComponent } from './dialog-registration/dialog-registration.component';
+import { DialogLoginComponent } from './dialog-login/dialog-login.component';
+
 import { DatesSelectComponent } from './dates-select/dates-select.component';
 import { DialogDateSelectComponent } from './dialog-date-select/dialog-date-select.component';
 import { MeasurementIndoorComponent } from './measurement-indoor/measurement-indoor.component';
+import { MeasurementListComponent } from './measurement-list/measurement-list.component';
+import { AboutComponent } from './about/about.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    MeasurementListComponent,
+
+    ControlPanelComponent,
     DateSelectComponent,
     UserLoginComponent,
     UserRegistrationComponent,
@@ -59,7 +63,10 @@ import { MeasurementIndoorComponent } from './measurement-indoor/measurement-ind
     DialogDatesSelectComponent,
     DatesSelectComponent,
     DialogDateSelectComponent,
-    MeasurementIndoorComponent
+
+    MeasurementListComponent,
+    MeasurementIndoorComponent,
+    AboutComponent
   ],
   imports: [
     BrowserModule,

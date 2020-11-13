@@ -14,5 +14,11 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
-  <mat-paginator [pageSize]="10"></mat-paginator>
+  <mat-paginator [pageSize]="100"></mat-paginator>
+  <!--
+  <button mat-button type="button" (click)="drawChart(this)" matTooltip="Обновить график">График</button>
+  -->
+  <div id="measurement-list-chart">
+  </div>
+
 </div>

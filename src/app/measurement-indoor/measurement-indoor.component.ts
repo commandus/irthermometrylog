@@ -39,6 +39,9 @@ export class MeasurementIndoorComponent implements OnInit, AfterViewInit {
 
     ngOnInit(): void {
       this.values = new MeasurementsDataSource(this.service);
+      this.values.connect(null).subscribe(r => {
+        this.drawChart(this);
+     });
     }
 
     ngAfterViewInit(): void {
@@ -108,13 +111,19 @@ export class MeasurementIndoorComponent implements OnInit, AfterViewInit {
       this.router.navigateByUrl('/');
     }
 
-    drawChart(): void {
-      const data = new google.visualization.DataTable();
+    drawChart(that: MeasurementIndoorComponent): void {
+      let data: any;
+      try {
+        data = new google.visualization.DataTable();
+      } catch (error) {
+        google.charts.setOnLoadCallback(() => { that.drawChart(that); });
+        return;
+      }
       data.addColumn('date', 'Время');
       data.addColumn('number', 'Помещение');
       data.addColumn('number', 'Объект(ы)');
 
-      this.values.connect(null).forEach(r => {
+      that.values.connect(null).forEach(r => {
         r.forEach(l => {
           data.addRow([
             new Date(l.time),
