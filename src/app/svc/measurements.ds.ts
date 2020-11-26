@@ -36,9 +36,6 @@ export class MeasurementsDataSource implements DataSource<Measurement> {
     .subscribe(
       {
         next: (value: any) => {
-          if (!value.length) {
-            // console.log('Dataset empty');
-          }
           this.subject.next(value);
         },
         error: (e: any) => {

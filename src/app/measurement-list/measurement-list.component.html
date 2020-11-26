@@ -1,18 +1,21 @@
 <mat-progress-bar *ngIf="values.loading | async" mode="indeterminate"></mat-progress-bar>
 <mat-form-field class="filter" id="filterfield">
-  <input matInput placeholder="Фильтр" #filter>
+	<input matInput placeholder="Фильтр" #filter>
 </mat-form-field>
-<button mat-button type="button" (click)="selectAllCards()" matTooltip="Все карты">{{ cardno ? 'Карта ' + cardno : 'Все карты'}}</button>
-<button mat-button type="button" (click)="selectDate()" matTooltip="Выбрать дату">{{ startFinish.start * 1000| date : 'dd.MM.yyyy' }}</button>
+<button mat-button type="button" (click)="selectAllCards()" matTooltip="Все карты">
+	{{ cardno ? 'Карта ' + cardno : 'Все карты'}}
+</button>
+<button mat-button type="button" (click)="selectDate()" matTooltip="Выбрать дату">
+	{{ startFinish.start * 1000| date : 'dd.MM.yyyy' }}
+</button>
 Мин. {{ (tmin / 100).toFixed(1) }} Макс. {{ (tmax / 100).toFixed(1) }}
-<div>
-  <table mat-table [dataSource]="values" matSort>
+<table mat-table [dataSource]="values" matSort>
 	<!--
-  	'id', 'gateid', 'imei', 'time', 't', 'tir', 'tmin', 'tambient', 'userid' ];
-    <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef matTooltip="Номер записи"> № п/п</th>
-      <td mat-cell *matCellDef="let v" routerLink="/user/{{v.id}}"> {{v.id}} </td>
-    </ng-container>
+	'id', 'gateid', 'imei', 'time', 't', 'tir', 'tmin', 'tambient', 'userid' ];
+	<ng-container matColumnDef="id">
+	<th mat-header-cell *matHeaderCellDef matTooltip="Номер записи"> № п/п</th>
+	<td mat-cell *matCellDef="let v" routerLink="/user/{{v.id}}"> {{v.id}} </td>
+	</ng-container>
 	<ng-container matColumnDef="gateid">
 		<th mat-header-cell *matHeaderCellDef matTooltip="Номер турникета"> Турникет </th>
 		<td mat-cell *matCellDef="let v" routerLink="/gate/{{v.gateid}}"> {{v.gateid}} </td>
@@ -22,13 +25,13 @@
 		<td mat-cell *matCellDef="let v"> {{v.imei}} </td>
 	</ng-container>
 	-->
-
 	<ng-container matColumnDef="time">
 		<th mat-header-cell *matHeaderCellDef matTooltip="Время"> Время </th>
 		<td mat-cell *matCellDef="let v"> {{v.time | date : 'HH:mm'}} </td>
 	</ng-container>
 	<ng-container matColumnDef="t">
-		<th mat-header-cell *matHeaderCellDef matTooltip="Температура с поправкой на коэффициент отражения"> Температура </th>
+		<th mat-header-cell *matHeaderCellDef matTooltip="Температура с поправкой на коэффициент отражения">
+			Температура </th>
 		<td mat-cell class="temperatureC" *matCellDef="let v">
 			<ng-container *ngIf="v.t &gt; max10">
 				<div class="temperatureCHigh">
@@ -49,14 +52,14 @@
 		<th mat-header-cell *matHeaderCellDef matTooltip="Температура окружающего воздуха"> T окруж. </th>
 		<td mat-cell *matCellDef="let v" > {{ v.tmin / 100 }} </td>
 	</ng-container>
-    <ng-container matColumnDef="tambient">
+	<ng-container matColumnDef="tambient">
 		<th mat-header-cell *matHeaderCellDef matTooltip="Температура корпуса датчика"> T корпуса </th>
 		<td mat-cell *matCellDef="let v" > {{ v.tmin / 100 }} </td>
 	</ng-container>
 	-->
-    <ng-container matColumnDef="userid">
+	<ng-container matColumnDef="userid">
 		<th mat-header-cell *matHeaderCellDef matTooltip="Номер карты сотрудника"> Карта </th>
-		<ng-container *matCellDef="let v" >
+		<ng-container *matCellDef="let v">
 			<ng-container *ngIf="v.userid == 0">
 				<td mat-cell routerLink="/card/{{v.userid}}">
 					<mat-icon>aspect_ratio</mat-icon>
@@ -67,13 +70,13 @@
 			</ng-container>
 		</ng-container>
 	</ng-container>
-	  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
-  <mat-paginator [pageSize]="100"></mat-paginator>
-  <!--
-  <button mat-button type="button" (click)="drawChart(this)" matTooltip="Обновить график">График</button>
-  -->
-  <div id="measurement-list-chart">
-  </div>
-</div>
+	<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+	<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+<mat-paginator [pageSize]="100"></mat-paginator>
+	<!--
+  	<button mat-button type="button" (click)="drawChart(this)" matTooltip="Обновить график">График</button>
+  	-->
+
+<div id="measurement-list-chart"></div>
+	

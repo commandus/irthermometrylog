@@ -12,6 +12,7 @@ import { MeasurementsService } from './../svc/measurements.service';
 import { MeasurementsDataSource } from '../svc/measurements.ds';
 import { Measurement } from '../model/measurement';
 import { DialogDateSelectComponent } from '../dialog-date-select/dialog-date-select.component';
+import { DialogConfirmComponent } from '../dialog-confirm/dialog-confirm.component';
 
 declare var google;
 
@@ -57,9 +58,21 @@ export class MeasurementListComponent implements OnInit, AfterViewInit {
         }
       });
       this.values.connect(null).subscribe(r => {
-        this.updateMinMax();
-        this.drawChart(this);
+        if (this.checkError(r)) {
+          this.updateMinMax();
+          this.drawChart(this);
+        }
      });
+    }
+
+    checkError(r: object): boolean {
+      if (typeof r.status !== 'undefined') {
+        if (r.status === 'Error') {
+          this.onError(-1);
+          return true;
+        }
+      }
+      return false;
     }
 
     ngAfterViewInit(): void {
@@ -145,6 +158,9 @@ export class MeasurementListComponent implements OnInit, AfterViewInit {
       this.router.navigateByUrl('/');
     }
 
+    /**
+     * Calc and show min & max temperature
+     */
     updateMinMax(): void {
       this.values.connect(null).forEach(r => {
         let tmin = 99999;
@@ -174,12 +190,48 @@ export class MeasurementListComponent implements OnInit, AfterViewInit {
       });
     }
 
+    onError(code: number): void {
+      console.error('Error ' + code);
+      const dialogConfig = new MatDialogConfig();
+      dialogConfig.disableClose = true;
+      dialogConfig.autoFocus = true;
+      dialogConfig.data = {
+        title: 'Требуется авторизация пользователя',
+        message: 'Нажмите "Да" для входа по логину и паролю сотрудника',
+      };
+      const dialogRef = this.dialog.open(DialogConfirmComponent, dialogConfig);
+      dialogRef.afterClosed().subscribe(
+          data => {
+            if (data.yes) {
+              const YSN_LOGIN_URL = 'https://adfs.ysn.ru/adfs/oauth2/authorize?client_id=d7096849-369b-4b74-81e1-1a41c59ede5d&response_type=id_token+token'
+                + '&redirect_uri=https%3A%2F%2Faikutsk.ru%2Firtm%2F%23%2F'
+                + '&cancel_uri=https%3A%2F%2Faikutsk.ru%2Firtm%2F%23%2Ferror'
+                + '&scope=openid&nonce=irtm';
+
+              window.location.href = YSN_LOGIN_URL;
+            } else {
+              this.router.navigateByUrl('error?code=-2');
+            }
+          }
+      );
+    }
+
     drawChart(that: MeasurementListComponent): void {
       let data: any;
+      if (typeof google.visualization === 'undefined' || typeof google.visualization.DataTable === 'undefined') {
+        // console.log('Wait google charts is loaded..');
+        google.charts.setOnLoadCallback(() => {
+          that.drawChart(that);
+        });
+        return;
+      }
       try {
-        data = new google.visualization.DataTable();
+          data = new google.visualization.DataTable();
       } catch (error) {
-        google.charts.setOnLoadCallback(() => { that.drawChart(that); });
+        console.error(error);
+        google.charts.setOnLoadCallback(() => {
+          that.drawChart(that);
+        });
         return;
       }
       data.addColumn('date', 'Время');
@@ -187,13 +239,15 @@ export class MeasurementListComponent implements OnInit, AfterViewInit {
       data.addColumn('number', 'Объект(ы)');
 
       that.values.connect(null).forEach(r => {
-        r.forEach(l => {
-          data.addRow([
-            new Date(l.time),
-            l.tmin / 100.,
-            l.t / 100.
-          ]);
-        });
+        if (Array.isArray(r)) {
+          r.forEach(l => {
+            data.addRow([
+              new Date(l.time),
+              l.tmin / 100.,
+              l.t / 100.
+            ]);
+          });
+        }
      });
 
       const options = {
@@ -205,5 +259,4 @@ export class MeasurementListComponent implements OnInit, AfterViewInit {
       const chart = new google.visualization.LineChart(document.getElementById('measurement-list-chart'));
       chart.draw(data, options);
     }
-
   }

@@ -45,6 +45,7 @@ import { DialogDateSelectComponent } from './dialog-date-select/dialog-date-sele
 import { MeasurementIndoorComponent } from './measurement-indoor/measurement-indoor.component';
 import { MeasurementListComponent } from './measurement-list/measurement-list.component';
 import { AboutComponent } from './about/about.component';
+import { ErrorComponent } from './error/error.component';
 
 @NgModule({
   declarations: [
@@ -66,7 +67,8 @@ import { AboutComponent } from './about/about.component';
 
     MeasurementListComponent,
     MeasurementIndoorComponent,
-    AboutComponent
+    AboutComponent,
+    ErrorComponent
   ],
   imports: [
     BrowserModule,

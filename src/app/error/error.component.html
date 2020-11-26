@@ -1,0 +1,22 @@
+<div>
+	<ng-container *ngIf="errcode == -2">
+		<div>
+			Вы отказались войти по логину и паролю.
+		</div>
+		<div>
+			Если вы все же решили это сделать, нажмите кнопку:
+		</div>
+	</ng-container>
+	<ng-container *ngIf="errcode == 0">
+		<div>
+			Вы отменили вход по логину и паролю.
+		</div>
+		<div>
+			Если вы все же решили это сделать, нажмите кнопку:
+		</div>
+	</ng-container>
+	<button mat-button type="button" (click)="login()" matTooltip="Авторизоваться как сотрудник">
+		Логин
+	</button>
+
+</div>

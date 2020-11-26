@@ -18,14 +18,14 @@ export class DialogConfirmComponent implements OnInit {
     this.message = data.message;
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
   }
 
-  ok() {
+  ok(): void {
     this.dialogRef.close({yes: true});
   }
 
-  cancel() {
+  cancel(): void {
     this.dialogRef.close({yes: false});
 }
 

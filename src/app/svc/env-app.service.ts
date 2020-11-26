@@ -1,6 +1,5 @@
 import { DialogLoginComponent } from './../dialog-login/dialog-login.component';
 import { DialogRegistrationComponent } from './../dialog-registration/dialog-registration.component';
-import { DialogDatesSelectComponent } from './../dialog-dates-select/dialog-dates-select.component';
 import { Injectable } from '@angular/core';
 import { Settings } from './../model/settings';
 import { User } from './../model/user';
