@@ -32,6 +32,7 @@ export class MeasurementListComponent implements OnInit, AfterViewInit {
     public startFinish = new StartFinish();
     public tmin: number;
     public tmax: number;
+    public errorCode = 0;
 
     public values: MeasurementsDataSource;
       // 'id', 'gateid', 'imei', 'time', 't', 'tir', 'tmin', 'tambient', 'userid'
@@ -58,20 +59,21 @@ export class MeasurementListComponent implements OnInit, AfterViewInit {
         }
       });
       this.values.connect(null).subscribe(r => {
-        if (this.checkError(r)) {
+        if (!this.hasError(r)) {
           this.updateMinMax();
           this.drawChart(this);
         }
      });
     }
 
-    checkError(r: object): boolean {
-      if (typeof r.status !== 'undefined') {
-        if (r.status === 'Error') {
+    hasError(r: object): boolean {
+      if (typeof r['status'] !== 'undefined') {
+        if (r['status'] === 'Error') {
           this.onError(-1);
           return true;
         }
       }
+      this.errorCode = 0;
       return false;
     }
 
@@ -168,7 +170,7 @@ export class MeasurementListComponent implements OnInit, AfterViewInit {
         try {
           r.forEach(l => {
             if (l.t < tmin) {
-              tmin = l.tmin;
+              tmin = l.t;
             }
             if (l.t > tmax) {
               tmax = l.t;
@@ -177,6 +179,7 @@ export class MeasurementListComponent implements OnInit, AfterViewInit {
         );
         } catch (error) {
         }
+
         if (tmin !== 99999) {
           this.tmin = tmin;
         } else {
@@ -188,9 +191,12 @@ export class MeasurementListComponent implements OnInit, AfterViewInit {
           this.tmax = 0;
         }
       });
+      console.log(this.tmin);
+      console.log(this.tmax);
     }
 
     onError(code: number): void {
+      this.errorCode = code;
       console.error('Error ' + code);
       const dialogConfig = new MatDialogConfig();
       dialogConfig.disableClose = true;
@@ -203,11 +209,9 @@ export class MeasurementListComponent implements OnInit, AfterViewInit {
       dialogRef.afterClosed().subscribe(
           data => {
             if (data.yes) {
-              const YSN_LOGIN_URL = 'https://adfs.ysn.ru/adfs/oauth2/authorize?client_id=d7096849-369b-4b74-81e1-1a41c59ede5d&response_type=id_token+token'
-                + '&redirect_uri=https%3A%2F%2Faikutsk.ru%2Firtm%2F%23%2F'
-                + '&cancel_uri=https%3A%2F%2Faikutsk.ru%2Firtm%2F%23%2Ferror'
-                + '&scope=openid&nonce=irtm';
-
+              const YSN_LOGIN_URL = 'https://adfs.ysn.ru/adfs/oauth2/authorize?client_id=d7096849-369b-4b74-81e1-1a41c59ede5d&response_type=id_token+token&redirect_uri=https%3A%2F%2Faikutsk.ru%2Flogin_ysn&scope=openid'
+                + '&nonce=https%3A%2F%2Faikutsk.ru%2Firtm%2F%23%2F'
+                + '&cancel_uri=https%3A%2F%2Faikutsk.ru%2Firtm%2F%23%2Ferror';
               window.location.href = YSN_LOGIN_URL;
             } else {
               this.router.navigateByUrl('error?code=-2');

@@ -8,7 +8,12 @@
 <button mat-button type="button" (click)="selectDate()" matTooltip="Выбрать дату">
 	{{ startFinish.start * 1000| date : 'dd.MM.yyyy' }}
 </button>
-Мин. {{ (tmin / 100).toFixed(1) }} Макс. {{ (tmax / 100).toFixed(1) }}
+<ng-container *ngIf="errorCode">
+	Ошибка {{errorCode}}:
+</ng-container>
+<ng-container *ngIf="!errorCode">
+	Мин. {{ (tmin / 100).toFixed(1) }} Макс. {{ (tmax / 100).toFixed(1) }}
+</ng-container>
 <table mat-table [dataSource]="values" matSort>
 	<!--
 	'id', 'gateid', 'imei', 'time', 't', 'tir', 'tmin', 'tambient', 'userid' ];
