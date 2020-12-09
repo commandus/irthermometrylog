@@ -105,7 +105,6 @@ export class MeasurementListComponent implements OnInit, AfterViewInit {
       ).subscribe();
 
       this.env.logged.subscribe(value => {
-        // console.log(value);
         this.load();
       });
     }
@@ -191,8 +190,6 @@ export class MeasurementListComponent implements OnInit, AfterViewInit {
           this.tmax = 0;
         }
       });
-      console.log(this.tmin);
-      console.log(this.tmax);
     }
 
     onError(code: number): void {
@@ -223,7 +220,6 @@ export class MeasurementListComponent implements OnInit, AfterViewInit {
     drawChart(that: MeasurementListComponent): void {
       let data: any;
       if (typeof google.visualization === 'undefined' || typeof google.visualization.DataTable === 'undefined') {
-        // console.log('Wait google charts is loaded..');
         google.charts.setOnLoadCallback(() => {
           that.drawChart(that);
         });
@@ -245,9 +241,13 @@ export class MeasurementListComponent implements OnInit, AfterViewInit {
       that.values.connect(null).forEach(r => {
         if (Array.isArray(r)) {
           r.forEach(l => {
+            let d = new Date(l.time);
+            if (isNaN(d.getTime())) {
+              d = new Date(parseInt(l.time + '', 10));
+            }
             data.addRow([
-              new Date(l.time),
-              l.tmin / 100.,
+              d,
+              l.tmin > -8000 ? l.tmin / 100. : 0.0,
               l.t / 100.
             ]);
           });
