@@ -24,12 +24,12 @@ export class UserLoginComponent implements OnInit {
   ) {
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.success = this.env.hasAccount();
     this.initForm();
   }
 
-  private initForm() {
+  private initForm(): void {
     this.formGroup = this.formBuilder.group({
       login: [this.env.user.login,
         [ Validators.required ]
@@ -45,8 +45,6 @@ export class UserLoginComponent implements OnInit {
     const user = new User(this.formGroup.getRawValue());
 
     delete user.id;
-    delete user.start;
-    delete user.status;
     delete user.rights;
     delete user.name;
 
@@ -77,7 +75,7 @@ export class UserLoginComponent implements OnInit {
       });
   }
 
-  signup() {
+  signup(): void {
     this.env.register();
   }
 }

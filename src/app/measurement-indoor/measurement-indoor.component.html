@@ -1,6 +1,5 @@
 <mat-progress-bar *ngIf="values.loading | async" mode="indeterminate"></mat-progress-bar>
 <button mat-button type="button" (click)="selectDate()" matTooltip="Выбрать дату">{{ startFinish.start * 1000| date : 'dd.MM.yyyy' }}</button>
-<a href="/#/">T посетителей</a>
 <div>
   <table mat-table [dataSource]="values" matSort>
 	<ng-container matColumnDef="time">

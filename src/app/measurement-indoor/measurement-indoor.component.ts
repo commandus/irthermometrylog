@@ -10,6 +10,7 @@ import { EnvAppService } from '../svc/env-app.service';
 import { MeasurementsService } from './../svc/measurements.service';
 import { MeasurementsDataSource } from '../svc/measurements.ds';
 import { DialogDateSelectComponent } from '../dialog-date-select/dialog-date-select.component';
+import { DialogConfirmComponent } from '../dialog-confirm/dialog-confirm.component';
 
 declare var google;
 
@@ -23,7 +24,7 @@ export class MeasurementIndoorComponent implements OnInit, AfterViewInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
     public startFinish = new StartFinish();
-
+    public errorCode = 0;
     public values: MeasurementsDataSource;
       // 'id', 'gateid', 'imei', 'time', 't', 'tir', 'tmin', 'tambient', 'userid'
       public displayedColumns: string[] = [
@@ -40,8 +41,10 @@ export class MeasurementIndoorComponent implements OnInit, AfterViewInit {
     ngOnInit(): void {
       this.values = new MeasurementsDataSource(this.service);
       this.values.connect(null).subscribe(r => {
-        this.drawChart(this);
-     });
+        if (!this.hasError(r)) {
+          this.drawChart(this);
+        }
+      });
     }
 
     ngAfterViewInit(): void {
@@ -68,7 +71,6 @@ export class MeasurementIndoorComponent implements OnInit, AfterViewInit {
     }
 
     load(): void {
-
       const filt = '"time">=' + this.startFinish.start * 1000 + ' and "time"<=' + (this.startFinish.finish  * 1000 + 999);
 
       const sort = '';
@@ -111,26 +113,75 @@ export class MeasurementIndoorComponent implements OnInit, AfterViewInit {
       this.router.navigateByUrl('/');
     }
 
+    hasError(r: object): boolean {
+      if (typeof r['status'] !== 'undefined') {
+        if (r['status'] === 'Error') {
+          this.onError(-1);
+          return true;
+        }
+      }
+      this.errorCode = 0;
+      return false;
+    }
+
+    onError(code: number): void {
+      this.errorCode = code;
+      console.error('Error ' + code);
+      const dialogConfig = new MatDialogConfig();
+      dialogConfig.disableClose = true;
+      dialogConfig.autoFocus = true;
+      dialogConfig.data = {
+        title: 'Требуется авторизация пользователя',
+        message: 'Нажмите "Да" для входа по логину и паролю сотрудника',
+      };
+      const dialogRef = this.dialog.open(DialogConfirmComponent, dialogConfig);
+      dialogRef.afterClosed().subscribe(
+          data => {
+            if (data.yes) {
+              const YSN_LOGIN_URL = 'https://adfs.ysn.ru/adfs/oauth2/authorize?client_id=d7096849-369b-4b74-81e1-1a41c59ede5d&response_type=id_token+token&redirect_uri=https%3A%2F%2Faikutsk.ru%2Flogin_ysn&scope=openid'
+                + '&nonce=https%3A%2F%2Faikutsk.ru%2Firtm%2Findoor%2F%23%2F'
+                + '&cancel_uri=https%3A%2F%2Faikutsk.ru%2Firtm%2F%23%2Ferror';
+              window.location.href = YSN_LOGIN_URL;
+            } else {
+              this.router.navigateByUrl('error?code=-2');
+            }
+          }
+      );
+    }
+
     drawChart(that: MeasurementIndoorComponent): void {
       let data: any;
+      if (typeof google.visualization === 'undefined' || typeof google.visualization.DataTable === 'undefined') {
+        google.charts.setOnLoadCallback(() => {
+          that.drawChart(that);
+        });
+        return;
+      }
       try {
-        data = new google.visualization.DataTable();
+          data = new google.visualization.DataTable();
       } catch (error) {
-        google.charts.setOnLoadCallback(() => { that.drawChart(that); });
+        console.error(error);
+        google.charts.setOnLoadCallback(() => {
+          that.drawChart(that);
+        });
         return;
       }
       data.addColumn('date', 'Время');
       data.addColumn('number', 'Помещение');
-      data.addColumn('number', 'Объект(ы)');
 
       that.values.connect(null).forEach(r => {
-        r.forEach(l => {
-          data.addRow([
-            new Date(l.time),
-            l.tmin / 100.,
-            l.t / 100.
-          ]);
-        });
+        if (Array.isArray(r)) {
+          r.forEach(l => {
+            let d = new Date(l.time);
+            if (isNaN(d.getTime())) {
+              d = new Date(parseInt(l.time + '', 10));
+            }
+            data.addRow([
+              d,
+              l.tmin / 100.
+            ]);
+          });
+        }
      });
 
       const options = {

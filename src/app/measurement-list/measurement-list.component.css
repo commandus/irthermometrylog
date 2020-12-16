@@ -11,6 +11,15 @@
 	padding-right: 5pt;
 }
 
+.card {
+	padding-left: 5pt;;
+	padding-right: 5pt;
+}
+
+.name {
+	padding-left: 5pt;;
+	padding-right: 5pt;
+}
 
 #measurement-list-chart {
 	width: 100%;

@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { DialogLoginComponent } from './../dialog-login/dialog-login.component';
 import { DialogRegistrationComponent } from './../dialog-registration/dialog-registration.component';
 import { Injectable } from '@angular/core';
@@ -12,7 +13,7 @@ import { Subject } from 'rxjs';
 })
 export class EnvAppService {
   settings: Settings;
-  version = '1.01';
+  version = '1.02';
   user = new User();
   svc = 'https://aikutsk.ru/irtm';
   svcTest = 'https://aikutsk.ru/irtm';
@@ -25,7 +26,21 @@ export class EnvAppService {
   }
 
   public isAdmin(): boolean {
-    return this.hasAccount() && ((this.user.rights & 1) !== 0);
+    // return this.hasAccount() && ((this.user.rights & 1) !== 0);
+    return true;
+  }
+
+  public isNameVisible(): boolean {
+    return this.settings.isNameVisible;
+  }
+
+  public toogleNameVisible(router: Router): void {
+    this.settings.isNameVisible = !this.settings.isNameVisible;
+    this.settings.save();
+    console.log(router);
+    if (router.url === '/') {
+      router.navigateByUrl('help');
+    }
   }
 
   login(): void {

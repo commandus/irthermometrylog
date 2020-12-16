@@ -28,9 +28,12 @@ export class UserDataSource implements DataSource<User> {
 
   load(alogin: string, apassword: string, filter: string, offset: number, pagesize: number): void {
     this.loadingSubject.next(true);
+    /*
     const w = new User({login: alogin, password: apassword });
     const v = new User({name: filter});
-    this.service.list(w, v, offset, pagesize).pipe(
+    w, v, offset, pagesize
+    */
+    this.service.list().pipe(
       catchError(() => of([])),
       finalize(() => this.loadingSubject.next(false))
     )

@@ -71,13 +71,23 @@ export class UserSelectComponent implements OnInit, AfterViewInit {
       this.values.load(
         this.env.user.login, this.env.user.password,
         this.filter.nativeElement.value, ofs, this.paginator.pageSize);
+
+      this.values.connect(null).subscribe(
+          value => {
+            if (value) {
+              this.paginator.length = value.length;
+            }
+        });
+
       const f = new User({name: this.filter.nativeElement.value});
+      /*
       this.service.count(this.env.user, f).subscribe(
         value => {
           if (value) {
             this.paginator.length = value;
           }
         });
+      */
     }
 
     onSelect(value: object): void {

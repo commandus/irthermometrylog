@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { MeasurementListComponent } from './measurement-list/measurement-list.component';
 import { ErrorComponent } from './error/error.component';
+import { HelpAboutComponent } from './help-about/help-about.component';
 
 const routes: Routes = [
   { path: '', component: MeasurementListComponent},
@@ -11,6 +12,7 @@ const routes: Routes = [
   { path: 'indoor', component: MeasurementIndoorComponent},
   { path: 'error', component: ErrorComponent},
   { path: 'error/:errcode', component: ErrorComponent},
+  { path: 'help', component: HelpAboutComponent},
   { path: 'about', component: AboutComponent}
 ];
 

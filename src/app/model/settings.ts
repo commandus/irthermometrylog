@@ -1,6 +1,9 @@
 export class Settings {
 
-  private reset() {
+  public isNameVisible: boolean;
+
+  private reset(): void {
+    this.isNameVisible = true;
   }
 
   constructor(values: object = {}) {
@@ -10,7 +13,7 @@ export class Settings {
     }
   }
 
-  public save() {
+  public save(): void {
     localStorage.setItem('settings', JSON.stringify(this));
   }
 }

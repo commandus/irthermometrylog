@@ -1,22 +1,19 @@
 export class User {
-  public id: number;
-  public start: number;
-  public status: number;
-  public rights: number;
+  public card: number;
   public name: string;
+  // reserved
+  public id: number;
+  public rights: number;
   public login: string;
   public password: string;
-  public tag: number;
 
   private reset(): void {
-    this.id = 0;
-    this.start = 0;
-    this.status = 0;
-    this.rights = 0;
+    this.card = 0;
     this.name = '';
+    this.id = 0;
+    this.rights = 0;
     this.login = '';
     this.password = '';
-    this.tag = 0;
   }
 
   constructor(value: object = {}) {

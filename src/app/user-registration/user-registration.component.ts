@@ -55,8 +55,6 @@ export class UserRegistrationComponent implements OnInit {
     const user = new User(this.formGroup.getRawValue());
 
     delete user.id;
-    delete user.start;
-    delete user.status;
     delete user.rights;
     delete user.name;
 

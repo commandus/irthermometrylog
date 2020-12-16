@@ -1,3 +1,4 @@
+import { UsersService } from './../svc/users.service';
 import { StartFinish } from './../model/startfinish';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { fromEvent } from 'rxjs';
@@ -27,7 +28,6 @@ export class MeasurementListComponent implements OnInit, AfterViewInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
     public max10 = 3700;
-    private path: string;
     public cardno: number;
     public startFinish = new StartFinish();
     public tmin: number;
@@ -35,28 +35,22 @@ export class MeasurementListComponent implements OnInit, AfterViewInit {
     public errorCode = 0;
 
     public values: MeasurementsDataSource;
-      // 'id', 'gateid', 'imei', 'time', 't', 'tir', 'tmin', 'tambient', 'userid'
-      public displayedColumns: string[] = [
-        'time', 't', 'userid'
-    ];
+    private userNames = new Object();  // pseudo-associative array
+    public displayedColumns: string[] = ['time', 't', 'card', 'cn'];
 
     constructor(
       private dialog: MatDialog,
       private router: Router,
       private route: ActivatedRoute,
       public env: EnvAppService,
-      private service: MeasurementsService
+      private service: MeasurementsService,
+      private serviceUsers: UsersService
     ) { }
 
     ngOnInit(): void {
       this.values = new MeasurementsDataSource(this.service);
       this.route.params.subscribe(params => {
         this.cardno = params['cardno'];
-        if (this.route.url['value'].length) {
-          this.path = this.route.url['value'][0].path;
-        } else {
-          this.path = '';
-        }
       });
       this.values.connect(null).subscribe(r => {
         if (!this.hasError(r)) {
@@ -109,11 +103,9 @@ export class MeasurementListComponent implements OnInit, AfterViewInit {
       });
     }
 
-    load(): void {
+    loadMeasurements(): void {
       const f = new Measurement({name: this.filter.nativeElement.value});
-
       let filt = '"time">=' + this.startFinish.start * 1000 + ' and "time"<=' + (this.startFinish.finish  * 1000 + 999);
-
       if (typeof this.cardno !== 'undefined') {
         filt += ' and userid = ' + this.cardno;
       }
@@ -134,6 +126,31 @@ export class MeasurementListComponent implements OnInit, AfterViewInit {
           this.paginator.length = 0;
         }}
       );
+    }
+
+    load(): void {
+      if (!this.env.isNameVisible()) {
+        this.loadMeasurements();
+        return;
+      }
+      this.serviceUsers.list().subscribe(value => {
+        const sz = value.length;
+        if (sz) {
+          for (let i = 0; i < sz; i++) {
+            this.userNames[value[i].card] = value[i].name;
+          }
+        }
+        this.loadMeasurements();
+      });
+    }
+
+    getName(card: number): string {
+      // if (typeof this.userNames === 'undefined') return '';
+      let v = this.userNames[card];
+      if (typeof v === 'undefined') {
+        v = 'Неизвестный';
+      }
+      return v;
     }
 
     showDate(value: any): void {

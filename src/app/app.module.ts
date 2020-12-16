@@ -46,6 +46,7 @@ import { MeasurementIndoorComponent } from './measurement-indoor/measurement-ind
 import { MeasurementListComponent } from './measurement-list/measurement-list.component';
 import { AboutComponent } from './about/about.component';
 import { ErrorComponent } from './error/error.component';
+import { HelpAboutComponent } from './help-about/help-about.component';
 
 @NgModule({
   declarations: [
@@ -68,7 +69,8 @@ import { ErrorComponent } from './error/error.component';
     MeasurementListComponent,
     MeasurementIndoorComponent,
     AboutComponent,
-    ErrorComponent
+    ErrorComponent,
+    HelpAboutComponent
   ],
   imports: [
     BrowserModule,
